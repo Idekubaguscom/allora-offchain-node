@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"flag"
 
 	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
@@ -48,9 +49,12 @@ func ConvertEntrypointsToInstances(userConfig lib.UserConfig) error {
 }
 
 func main() {
-	if dotErr := godotenv.Load(); dotErr != nil {
-		log.Info().Msg("Unable to load .env file")
-	}
+    envFile := flag.String("env", ".env", "Path to the .env file")
+    flag.Parse()
+
+    if dotErr := godotenv.Load(*envFile); dotErr != nil {
+        log.Info().Msgf("Unable to load .env file from %s", *envFile)
+    }
 
 	// UNIX Time is faster and smaller than most timestamps
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
